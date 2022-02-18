@@ -1,0 +1,128 @@
+{
+	"info": {
+		"_postman_id": "9e501567-79ba-4e80-8185-5bb8c77baf1d",
+		"name": "curl-exemplo",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "https://serverest.dev/usuarios",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"\r",
+							"pm.test(\"mensagem de sucesso\", function () {\r",
+							"    pm.expect(jsonData.message).to.eql(\"Cadastro realizado com sucesso\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"window = {}; \r",
+							"pm.sendRequest(\"https://cdnjs.cloudflare.com/ajax/libs/Faker/3.1.0/faker.min.js\", (error, response) => { \r",
+							"    var text = response.text(); \r",
+							"    (new Function(text))(); \r",
+							"    window.faker.locale = \"pt_BR\"; \r",
+							"    var name = window.faker.name.firstName();\r",
+							"    var phoneNumber = window.faker.phone.phoneNumber(); \r",
+							"    const fakerEmail = window.faker.internet.email();\r",
+							"    window.faker.seed(0);\r",
+							"    pm.environment.set(\"phoneNumber\", phoneNumber); \r",
+							"    pm.environment.set(\"fakerEmail\", fakerEmail);\r",
+							"    pm.environment.set(\"userRandom\", name); \r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "authority",
+						"value": "serverest.dev"
+					},
+					{
+						"key": "sec-ch-ua",
+						"value": "\" Not;A Brand\";v=\"99\", \"Google Chrome\";v=\"97\", \"Chromium\";v=\"97\"",
+						"disabled": true
+					},
+					{
+						"key": "accept",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "content-type",
+						"value": "application/json;charset=UTF-8"
+					},
+					{
+						"key": "sec-ch-ua-mobile",
+						"value": "?0",
+						"disabled": true
+					},
+					{
+						"key": "user-agent",
+						"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36"
+					},
+					{
+						"key": "sec-ch-ua-platform",
+						"value": "\"Windows\"",
+						"disabled": true
+					},
+					{
+						"key": "origin",
+						"value": "https://front.serverest.dev"
+					},
+					{
+						"key": "sec-fetch-site",
+						"value": "same-site"
+					},
+					{
+						"key": "sec-fetch-mode",
+						"value": "cors",
+						"disabled": true
+					},
+					{
+						"key": "sec-fetch-dest",
+						"value": "empty",
+						"disabled": true
+					},
+					{
+						"key": "referer",
+						"value": "https://front.serverest.dev/"
+					},
+					{
+						"key": "accept-language",
+						"value": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"nome\":\"{{userRandom}}\",\"email\":\"{{fakerEmail}}\",\"password\":\"12345\",\"administrador\":\"true\"}"
+				},
+				"url": {
+					"raw": "{{Url}}/usuarios",
+					"host": [
+						"{{Url}}"
+					],
+					"path": [
+						"usuarios"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
